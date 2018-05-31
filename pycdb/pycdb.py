@@ -926,6 +926,10 @@ class PyCdb(object):
             # what type of event was this?
             #
             while True: # always breaks at end
+                # did the process exit?
+                event = self._exit_process_info(desc)
+                if event:
+                    break
                 # was this a breakpoint?
                 event = self._breakpoint_info(desc)
                 if event:
