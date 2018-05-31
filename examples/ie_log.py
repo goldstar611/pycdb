@@ -6,7 +6,7 @@ import getopt
 sys.path.append(os.path.join("..", "pycdb"))
 
 import pycdb
-from pycdb import PyCdb, PyCdbPipeClosedException, ExceptionEvent
+from pycdb import PyCdb, PyCdbPipeClosedException, ExceptionEvent, ExitProcessEvent
 
 SYMPATH = "z:\work\win_syms\symbols"
 
@@ -55,6 +55,9 @@ class IEDebugLog(PyCdb):
                 # call any handlers associated with the events
                 event = self.process_event()
                 #print "got debugger event: %s: %s" % (type(event), event.description)
+                
+                if type(event) == ExitProcessEvent:
+                    break
 
                 if type(event) == ExceptionEvent:
                     exception = event
