@@ -6,7 +6,7 @@ import getopt
 sys.path.append(os.path.join("..", "pycdb"))
 
 import pycdb
-from pycdb import PyCdb, PyCdbPipeClosedException
+from pycdb import PyCdb, PyCdbPipeClosedException, ExitProcessEvent
 
 
 class BreakpointExample(PyCdb):
@@ -57,6 +57,9 @@ class BreakpointExample(PyCdb):
                 # call any handlers associated with the events
                 event = self.process_event()
                 print "got debugger event: %s" % (event.description)
+                
+                if type(event) == ExitProcessEvent:
+                    break
 
 
         except PyCdbPipeClosedException:
