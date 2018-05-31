@@ -127,6 +127,12 @@ class BreakpointEvent(DebuggerEvent):
     def __str__(self):
         return "BreakpointEvent(%x,%x): %u" % (self.pid, self.tid, self.bpnum)
 
+class ExitProcessEvent(DebuggerEvent):
+    def __init__(self, exit_code):
+        self.exit_code = exit_code
+    def __str__(self):
+        return "BreakpointEvent(): %u" % (self.exit_code)
+
 class ExceptionEvent(DebuggerEvent):
     """
     class that represents an exception raised in the debuggee, such
@@ -900,6 +906,15 @@ class PyCdb(object):
         lme = LoadModuleEvent(module_path, module_base)
         return lme
 
+    def _exit_process_info(self, event_desc):
+        m = re.search(r'Exit Process .*, code (\d+)', event_desc)
+        if not m:
+            return None
+        exit_code = m.group(1)
+        ep = ExitProcessEvent(exit_code)
+        return ep
+
+    
     def lastevent(self):
         event = None
         output = self.execute('.lastevent')
