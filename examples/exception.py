@@ -6,7 +6,7 @@ import getopt
 sys.path.append(os.path.join("..", "pycdb"))
 
 import pycdb
-from pycdb import PyCdb, PyCdbPipeClosedException, ExceptionEvent
+from pycdb import PyCdb, PyCdbPipeClosedException, ExceptionEvent, ExitProcessEvent
 
 
 class ExceptionCatcher(PyCdb):
@@ -110,6 +110,9 @@ class ExceptionCatcher(PyCdb):
                 # call any breakpoint handlers as well
                 event = self.process_event()
                 print "got debugger event: %s" % (event.description)
+                
+                if type(event) == ExitProcessEvent:
+                    break
 
                 if type(event) == ExceptionEvent:
                     exception = event
